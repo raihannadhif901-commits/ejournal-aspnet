@@ -1,58 +1,161 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌸 Yopi Hijab - Premium E-Commerce Store
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel Version](https://img.shields.io/badge/Laravel-11.x-red?style=for-the-badge&logo=laravel)](https://laravel.com)
+[![React Version](https://img.shields.io/badge/React-18.x-blue?style=for-the-badge&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com)
+[![Filament](https://img.shields.io/badge/Filament_v3-Admin_Panel-amber?style=for-the-badge&logo=laravel)](https://filamentphp.com)
+[![Midtrans](https://img.shields.io/badge/Midtrans-Payment_Gateway-blueviolet?style=for-the-badge)](https://midtrans.com)
+[![Pest Testing](https://img.shields.io/badge/Pest_PHP-Testing_Suite-green?style=for-the-badge)](https://pestphp.com)
 
-## About Laravel
+A premium, modern E-Commerce web application built for **Yopi Hijab**. This application features an elegant storefront designed with smooth user interactions, a fully integrated **Midtrans Sandbox Payment Gateway** for secure instant checkout, a robust **Filament v3 Admin Panel** for management, and a complete automated test suite using **Pest PHP**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Fitur Utama (Key Features)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🛍️ Frontend (Storefront Pembeli)
+* **Premium Glassmorphic UI**: Palet warna kurasi mewah (*Alabaster Silk, Dark Espresso, Sand Cream*) dengan tipografi modern (*Outfit & Playfair Display*).
+* **Smooth Scrolling (Lenis)**: Pergerakan scroll halaman yang sangat halus untuk memberikan impresi premium kepada pembeli.
+* **Framer Motion Animations**: Transisi mikro-animasi pada pemuatan elemen, tombol hover, dan modal detail produk (Quick View).
+* **Dynamic Hero Showcase**: Menampilkan produk *featured* pilihan admin langsung di banner utama halaman beranda.
+* **Interactive FAQ Page**: Halaman bantuan interaktif menggunakan efek transisi Accordion yang dinamis.
+* **Cart Drawer**: Laci belanja melayang dengan penghitung kuantitas otomatis sebelum checkout.
+* **In-App Checkout Snap**: Pembeli melakukan pembayaran langsung di halaman web melalui pop-up overlay Midtrans Snap (mendukung QRIS, GoPay, ShopeePay, Virtual Account Bank) tanpa diarahkan ke situs luar.
 
-## Learning Laravel
+### 🛡️ Dashboard Admin (Filament v3)
+* **Product Management (CRUD)**:
+  * Pengaturan produk lengkap (Nama, Kategori, Deskripsi, Harga, Tag).
+  * **Opsi Gambar Ganda**: Admin dapat menentukan foto produk melalui unggah file lokal (*Upload*) ATAU menempelkan tautan URL gambar eksternal (Google Drive / Cloud Storage).
+  * **Featured Switcher**: Mengatur produk tertentu untuk tampil di hero banner utama.
+* **Orders Dashboard (CRUD & Monitoring)**:
+  * Pemantauan semua transaksi masuk dengan filter status pembayaran (`paid`, `pending`, `failed`).
+  * **Tampilan Detail Pesanan**: Menyajikan informasi kontak dan alamat pengiriman pelanggan.
+  * **Order Items Repeater**: Menampilkan daftar barang yang dibeli (nama produk, harga satuan, jumlah beli, subtotal) dalam format tabel terkunci (*read-only*) untuk keamanan data.
+  * **Manual Status Update**: Admin dapat mengubah status pembayaran secara manual jika diperlukan (misal ada kendala teknis).
+  * *Fitur Tambah & Hapus Pesanan dinonaktifkan untuk melindungi integritas riwayat transaksi bisnis.*
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 💳 Integrasi Payment Gateway (Midtrans Sandbox)
+* **Secure Webhooks**: Endpoint webhook (`/checkout/webhook`) dilindungi dengan validasi **SHA-512 Signature Key** yang dicocokkan dengan Server Key.
+* **Automated Status Update**: Sinkronisasi instan status transaksi dari Midtrans ke database lokal (`settlement`/`capture` -> `paid`, `expire`/`cancel`/`deny` -> `failed`).
+* **CSRF Protection Bypass**: Pengecualian rute webhook dari verifikasi token CSRF Laravel agar dapat diakses oleh server luar Midtrans.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 📊 Analitik & Keamanan (Analytics & Security)
+* **Analitik Produk**: Pencatatan jumlah tayangan produk (*Product Views*) dan frekuensi produk dimasukkan ke keranjang (*Cart Additions*).
+* **Super Admin Lock**: Panel admin Filament diamankan secara ketat menggunakan kontrak `FilamentUser` dan hanya mengizinkan akun dengan status `is_admin = true` yang dapat login.
+* **API Rate Limiter**: Pembatasan request (*throttle*) pada rute penambahan keranjang dan analitik untuk mencegah eksploitasi.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## 🛠️ Tech Stack
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+* **Backend**: Laravel 11 (PHP 8.2+)
+* **Frontend**: React 18, TypeScript, Inertia.js
+* **CSS Framework**: Tailwind CSS
+* **Database**: SQLite (Bebas setup, sangat ringan)
+* **Admin Panel**: Filament v3 (Livewire)
+* **Payment Gateway**: Midtrans PHP SDK & Snap JS
+* **Testing Tool**: Pest PHP
+* **Animation**: Framer Motion & Lenis Scroll
 
+---
+
+## 🚀 Panduan Instalasi Lokal (Local Installation)
+
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di komputer lokal Anda:
+
+### 1. Prasyarat (Prerequisites)
+Pastikan komputer Anda sudah terinstal:
+* PHP >= 8.2
+* Composer
+* Node.js & NPM
+* Git
+
+### 2. Kloning Repositori
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/raihannadhif901-commits/hijab-premium-ecommerce.git
+cd hijab-premium-ecommerce
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 3. Instalasi Dependency (PHP & Node)
+```bash
+composer install
+npm install
+```
 
-## Contributing
+### 4. Konfigurasi Environment (`.env`)
+Salin file `.env.example` menjadi `.env`:
+```bash
+copy .env.example .env
+```
+Buka file `.env` yang baru dibuat dan isi kredensial Midtrans Sandbox Anda:
+```env
+APP_URL=http://127.0.0.1:8000
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+MIDTRANS_MERCHANT_ID=your_merchant_id
+MIDTRANS_CLIENT_KEY=your_client_key
+MIDTRANS_SERVER_KEY=your_server_key
+MIDTRANS_IS_PRODUCTION=false
+```
 
-## Code of Conduct
+### 5. Setup Database & Seeders
+Buat file database SQLite baru:
+```bash
+# Windows (PowerShell)
+New-Item -ItemType File -Path database/database.sqlite
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Windows (CMD)
+type null > database/database.sqlite
+```
+Jalankan migrasi database beserta pembuatan data awal produk & akun admin otomatis:
+```bash
+php artisan migrate:fresh --seed
+```
+*Catatan: Akun Super Admin default otomatis dibuat saat proses seeder:*
+* **Email**: `admin@yopihijab.com`
+* **Password**: `password`
 
-## Security Vulnerabilities
+### 6. Jalankan Server Lokal
+Jalankan server backend Laravel (Terminal 1):
+```bash
+php artisan serve
+```
+Jalankan server kompilasi frontend Vite (Terminal 2):
+```bash
+npm run dev
+```
+Buka **[http://127.0.0.1:8000](http://127.0.0.1:8000)** di browser Anda!
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🧪 Menjalankan Automated Testing
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proyek ini dilengkapi dengan 40 skenario pengujian otomatis menggunakan Pest PHP untuk memvalidasi keamanan, otorisasi admin, alur keranjang, hingga webhook status pembayaran.
+
+Untuk menjalankan seluruh tes:
+```bash
+php artisan test
+```
+
+---
+
+## 🌐 Panduan Deployment Produksi (Production Checklist)
+
+1. **Ubah Konfigurasi `.env`**:
+   * Set `APP_ENV=production` dan `APP_DEBUG=false`.
+   * Ubah `MIDTRANS_IS_PRODUCTION=true`.
+   * Ganti Kredensial Midtrans dengan Merchant ID, Client Key, dan Server Key **Live/Production** Anda.
+2. **Kompilasi Frontend**:
+   Jalankan `npm run build` sebelum mengunggah file ke hosting (jika menggunakan Shared Hosting), atau biarkan server CI/CD Anda (seperti Render/Fly.io) menjalankan build otomatis.
+3. **Pengaturan URL Notifikasi**:
+   Buka Dashboard Production Midtrans Anda, masuk ke **Settings > Configuration**, dan isi:
+   * **Payment Notification URL**: `https://domain-anda.com/checkout/webhook`
+   * **Finish Redirect URL**: `https://domain-anda.com/`
+   * **Unfinish Redirect URL**: `https://domain-anda.com/`
+   * **Error Redirect URL**: `https://domain-anda.com/`
+
+---
+
+## 📄 Lisensi
+
+Proyek ini berlisensi **MIT License** - bebas digunakan untuk tujuan edukasi dan referensi portofolio.
