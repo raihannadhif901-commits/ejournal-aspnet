@@ -1,4 +1,4 @@
-# 🌸 Yopi Hijab - Premium E-Commerce Store
+# Yopi Hijab - Premium E-Commerce Store
 
 [![Laravel Version](https://img.shields.io/badge/Laravel-11.x-red?style=for-the-badge&logo=laravel)](https://laravel.com)
 [![React Version](https://img.shields.io/badge/React-18.x-blue?style=for-the-badge&logo=react)](https://react.dev)
@@ -12,9 +12,9 @@ A premium, modern E-Commerce web application built for **Yopi Hijab**. This appl
 
 ---
 
-## ✨ Fitur Utama (Key Features)
+## Fitur Utama (Key Features)
 
-### 🛍️ Frontend (Storefront Pembeli)
+### Frontend (Storefront Pembeli)
 * **Premium Glassmorphic UI**: Palet warna kurasi mewah (*Alabaster Silk, Dark Espresso, Sand Cream*) dengan tipografi modern (*Outfit & Playfair Display*).
 * **Smooth Scrolling (Lenis)**: Pergerakan scroll halaman yang sangat halus untuk memberikan impresi premium kepada pembeli.
 * **Framer Motion Animations**: Transisi mikro-animasi pada pemuatan elemen, tombol hover, dan modal detail produk (Quick View).
@@ -23,7 +23,7 @@ A premium, modern E-Commerce web application built for **Yopi Hijab**. This appl
 * **Cart Drawer**: Laci belanja melayang dengan penghitung kuantitas otomatis sebelum checkout.
 * **In-App Checkout Snap**: Pembeli melakukan pembayaran langsung di halaman web melalui pop-up overlay Midtrans Snap (mendukung QRIS, GoPay, ShopeePay, Virtual Account Bank) tanpa diarahkan ke situs luar.
 
-### 🛡️ Dashboard Admin (Filament v3)
+### Dashboard Admin (Filament v3)
 * **Product Management (CRUD)**:
   * Pengaturan produk lengkap (Nama, Kategori, Deskripsi, Harga, Tag).
   * **Opsi Gambar Ganda**: Admin dapat menentukan foto produk melalui unggah file lokal (*Upload*) ATAU menempelkan tautan URL gambar eksternal (Google Drive / Cloud Storage).
@@ -35,19 +35,19 @@ A premium, modern E-Commerce web application built for **Yopi Hijab**. This appl
   * **Manual Status Update**: Admin dapat mengubah status pembayaran secara manual jika diperlukan (misal ada kendala teknis).
   * *Fitur Tambah & Hapus Pesanan dinonaktifkan untuk melindungi integritas riwayat transaksi bisnis.*
 
-### 💳 Integrasi Payment Gateway (Midtrans Sandbox)
+### Integrasi Payment Gateway (Midtrans Sandbox)
 * **Secure Webhooks**: Endpoint webhook (`/checkout/webhook`) dilindungi dengan validasi **SHA-512 Signature Key** yang dicocokkan dengan Server Key.
 * **Automated Status Update**: Sinkronisasi instan status transaksi dari Midtrans ke database lokal (`settlement`/`capture` -> `paid`, `expire`/`cancel`/`deny` -> `failed`).
 * **CSRF Protection Bypass**: Pengecualian rute webhook dari verifikasi token CSRF Laravel agar dapat diakses oleh server luar Midtrans.
 
-### 📊 Analitik & Keamanan (Analytics & Security)
+### Analitik & Keamanan (Analytics & Security)
 * **Analitik Produk**: Pencatatan jumlah tayangan produk (*Product Views*) dan frekuensi produk dimasukkan ke keranjang (*Cart Additions*).
 * **Super Admin Lock**: Panel admin Filament diamankan secara ketat menggunakan kontrak `FilamentUser` dan hanya mengizinkan akun dengan status `is_admin = true` yang dapat login.
 * **API Rate Limiter**: Pembatasan request (*throttle*) pada rute penambahan keranjang dan analitik untuk mencegah eksploitasi.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Backend**: Laravel 11 (PHP 8.2+)
 * **Frontend**: React 18, TypeScript, Inertia.js
@@ -60,7 +60,7 @@ A premium, modern E-Commerce web application built for **Yopi Hijab**. This appl
 
 ---
 
-## 🚀 Panduan Instalasi Lokal (Local Installation)
+## Panduan Instalasi Lokal (Local Installation)
 
 Ikuti langkah-langkah berikut untuk menjalankan proyek ini di komputer lokal Anda:
 
@@ -128,7 +128,7 @@ Buka **[http://127.0.0.1:8000](http://127.0.0.1:8000)** di browser Anda!
 
 ---
 
-## 🧪 Menjalankan Automated Testing
+## Menjalankan Automated Testing
 
 Proyek ini dilengkapi dengan 40 skenario pengujian otomatis menggunakan Pest PHP untuk memvalidasi keamanan, otorisasi admin, alur keranjang, hingga webhook status pembayaran.
 
@@ -139,7 +139,7 @@ php artisan test
 
 ---
 
-## 🌐 Panduan Deployment Produksi (Production Checklist)
+## Panduan Deployment Produksi (Production Checklist)
 
 1. **Ubah Konfigurasi `.env`**:
    * Set `APP_ENV=production` dan `APP_DEBUG=false`.
@@ -156,6 +156,6 @@ php artisan test
 
 ---
 
-## 📄 Lisensi
+## Lisensi
 
 Proyek ini berlisensi **MIT License** - bebas digunakan untuk tujuan edukasi dan referensi portofolio.
