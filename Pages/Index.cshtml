@@ -1,0 +1,158 @@
+@page
+@model FirstMediaVoucher.Pages.IndexModel
+@{
+    ViewData["Title"] = "First Media Privilege Vouchers";
+}
+
+<!-- Hero Section -->
+<div class="flex-grow bg-gradient-to-b from-rose-50/50 via-slate-50 to-white flex flex-col justify-center">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Hero Text Column (Left) -->
+            <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-red-light border border-brand-red/10 text-brand-red font-semibold text-xs uppercase tracking-wider">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 animate-pulse"></i>
+                    Spesial Pelanggan First Media
+                </div>
+                
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    Klaim Voucher Diskon & Promo Menarik Anda!
+                </h1>
+                
+                <p class="text-lg text-slate-500 max-w-xl mx-auto lg:mx-0">
+                    Nikmati penawaran eksklusif dari ratusan merchant populer khusus untuk Anda pelanggan setia First Media. Cukup klaim, tunjukkan barcode di gerai, dan nikmati diskonnya.
+                </p>
+                
+                <div class="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                    <a asp-page="/Promos" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white bg-brand-red hover:bg-brand-red-hover active:scale-95 transition-all duration-200 rounded-2xl shadow-lg shadow-brand-red/20 gap-2 cursor-pointer">
+                        Lihat Semua Promo
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#how-it-works" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-4 text-base font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-2xl transition-all duration-200">
+                        Cara Penukaran
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mock UI Preview Column (Right) -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-72 sm:w-80">
+                    <!-- Background Glow Element -->
+                    <div class="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-brand-red/10 to-amber-500/10 blur-xl opacity-75"></div>
+                    
+                    <!-- Phone Frame Showcase -->
+                    <div class="relative bg-white rounded-[40px] border-[8px] border-slate-900 shadow-2xl overflow-hidden aspect-[9/19] flex flex-col">
+                        <!-- Speaker & Camera notch -->
+                        <div class="absolute top-0 inset-x-0 h-6 flex justify-center">
+                            <div class="w-32 h-4 bg-slate-900 rounded-b-xl"></div>
+                        </div>
+                        
+                        <!-- Screen Content -->
+                        <div class="flex-grow pt-8 p-4 bg-slate-50 flex flex-col gap-4 text-left select-none">
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Rekomendasi</span>
+                                <span class="text-[10px] text-brand-red font-bold flex items-center gap-0.5">⭐ Populer</span>
+                            </div>
+                            
+                            <!-- Mock Card 1 -->
+                            <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-sm shrink-0 border border-emerald-100">
+                                    SBUX
+                                </div>
+                                <div class="min-w-0 flex-grow">
+                                    <div class="text-xs font-bold text-slate-800 truncate">Starbucks Coffee</div>
+                                    <div class="text-[10px] text-slate-400">Diskon 30% Minuman</div>
+                                </div>
+                                <div class="text-right shrink-0">
+                                    <div class="text-[10px] font-bold text-brand-red">30% OFF</div>
+                                    <div class="text-[8px] text-slate-400">82 Tersisa</div>
+                                </div>
+                            </div>
+
+                            <!-- Mock Card 2 -->
+                            <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-sm shrink-0 border border-amber-100">
+                                    XXI
+                                </div>
+                                <div class="min-w-0 flex-grow">
+                                    <div class="text-xs font-bold text-slate-800 truncate">Cinema XXI</div>
+                                    <div class="text-[10px] text-slate-400">Beli 1 Gratis 1 Tiket</div>
+                                </div>
+                                <div class="text-right shrink-0">
+                                    <div class="text-[10px] font-bold text-brand-red">B1G1</div>
+                                    <div class="text-[8px] text-slate-400">45 Tersisa</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Mock Card 3 (Redeemed visual) -->
+                            <div class="bg-white p-4 rounded-2xl border border-slate-150 shadow-sm flex flex-col gap-3 items-center text-center mt-2 relative">
+                                <div class="w-12 h-12 rounded-full bg-rose-50 text-brand-red flex items-center justify-center shrink-0 border border-brand-red/10">
+                                    <i data-lucide="qr-code" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-800">Voucher Aktif</div>
+                                    <div class="text-[9px] text-slate-400 mt-0.5">Tunjukkan ke Kasir</div>
+                                </div>
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-brand-red h-full w-[80%]"></div>
+                                </div>
+                                <div class="text-[9px] font-mono text-slate-600 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
+                                    FM-SBUX-8937
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div id="how-it-works" class="bg-white border-t border-b border-slate-100 py-16 scroll-mt-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Bagaimana Cara Kerjanya?
+        </h2>
+        <p class="text-slate-400 mt-2 max-w-lg mx-auto text-sm">
+            Hanya butuh 3 langkah mudah untuk menukarkan voucher Anda di gerai fisik terdekat.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+            <!-- Step 1 -->
+            <div class="p-6 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition duration-300 flex flex-col items-center">
+                <div class="w-12 h-12 rounded-2xl bg-brand-red-light text-brand-red flex items-center justify-center font-bold text-lg border border-brand-red/15 mb-4 shadow-sm">
+                    1
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Pilih & Klaim Promo</h3>
+                <p class="text-sm text-slate-400 mt-2">
+                    Jelajahi berbagai promo eksklusif yang tersedia di halaman utama lalu klik tombol klaim voucher.
+                </p>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="p-6 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition duration-300 flex flex-col items-center">
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-brand-gold flex items-center justify-center font-bold text-lg border border-brand-gold/15 mb-4 shadow-sm">
+                    2
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Dapatkan Barcode</h3>
+                <p class="text-sm text-slate-400 mt-2">
+                    Sistem akan membuat barcode dan QR Code unik yang berlaku selama 15 menit untuk penukaran.
+                </p>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="p-6 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition duration-300 flex flex-col items-center">
+                <div class="w-12 h-12 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center font-bold text-lg border border-green-200 mb-4 shadow-sm">
+                    3
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Tunjukkan ke Kasir</h3>
+                <p class="text-sm text-slate-400 mt-2">
+                    Tunjukkan layar handphone Anda ke kasir gerai. Kasir akan memvalidasi kode di portal khusus gerai secara instan.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

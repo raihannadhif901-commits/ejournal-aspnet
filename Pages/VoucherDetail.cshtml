@@ -1,0 +1,207 @@
+@page
+@model FirstMediaVoucher.Pages.VoucherDetailModel
+@{
+    ViewData["Title"] = Model.Voucher?.Title ?? "Detail Voucher";
+}
+
+<div class="flex-grow py-10 bg-transparent">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Back Button -->
+        <div class="mb-6">
+            <a asp-page="/Promos" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-brand-orange transition font-space">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Kembali ke Katalog
+            </a>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Column: Voucher Info (8 cols) -->
+            <div class="md:col-span-8 bg-white/90 backdrop-blur-md rounded-2xl border border-orange-100/30 shadow-sm overflow-hidden">
+                <!-- Header Banner Image -->
+                @if (Model.Voucher != null)
+                {
+                    <div class="h-64 w-full bg-slate-100 overflow-hidden relative">
+                        <img src="@Model.Voucher.ImageUrl" alt="@Model.Voucher.PartnerName" class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent"></div>
+                    </div>
+                }
+
+                <div class="p-6 sm:p-8 space-y-6">
+                    <!-- Title Info -->
+                    <div>
+                        <div class="flex items-center gap-2 font-space">
+                            <span class="rounded px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-orange-50 text-brand-orange border border-orange-100/40">
+                                @Model.Voucher?.Category
+                            </span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                @Model.Voucher?.PartnerName
+                            </span>
+                        </div>
+                        <h1 class="text-2xl font-black text-slate-900 mt-2 font-space tracking-tight leading-tight">@Model.Voucher?.Title</h1>
+                    </div>
+
+                    <hr class="border-orange-50" />
+
+                    <!-- Description -->
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 font-space">Deskripsi Promo</h3>
+                        <p class="text-sm text-slate-550 leading-relaxed">
+                            @Model.Voucher?.Description
+                        </p>
+                    </div>
+
+                    <!-- Terms & Conditions -->
+                    <div class="space-y-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 font-space">Syarat & Ketentuan</h3>
+                        <ul class="space-y-2.5">
+                            @if (Model.Voucher != null && !string.IsNullOrEmpty(Model.Voucher.TermsAndConditions))
+                            {
+                                var terms = Model.Voucher.TermsAndConditions.Split(';');
+                                foreach (var term in terms)
+                                {
+                                    <li class="text-xs text-slate-550 flex gap-2.5 items-start">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
+                                        <span>@term</span>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Redeem Code Area (4 cols) -->
+            <div class="md:col-span-4 space-y-6">
+                
+                <!-- Value Card -->
+                <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-orange-100/30 shadow-sm p-6 text-center space-y-1">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block font-space">Nilai Penawaran</span>
+                    <span class="text-2xl font-black text-brand-orange block font-space">@Model.Voucher?.DiscountAmount</span>
+                </div>
+
+                <!-- Redeem Code Card -->
+                <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-orange-100/30 shadow-sm p-6 space-y-6">
+                    <div class="text-center space-y-2">
+                        <i data-lucide="ticket-percent" class="w-8 h-8 text-brand-orange mx-auto"></i>
+                        <h3 class="font-bold text-slate-800 text-sm font-space">Kode Redeem</h3>
+                        <p class="text-xs text-slate-400">Ketuk untuk menampilkan kode voucher dan gunakan di gerai partner kami.</p>
+                    </div>
+
+                    <!-- Monospace Code Box with Reveal Overlay -->
+                    <div class="space-y-3 font-space">
+                        <div class="relative overflow-hidden rounded-xl border border-slate-200">
+                            <!-- Code (Blurred by default) -->
+                            <div id="codeBox" class="font-mono text-center text-lg font-bold text-slate-800 bg-slate-50 py-3.5 tracking-widest select-none filter blur-md transition-all duration-500 pointer-events-none">
+                                @Model.Voucher?.RedeemCode
+                            </div>
+                            
+                            <!-- Tap to Reveal Overlay -->
+                            <div id="revealOverlay" onclick="revealCode()" 
+                                 class="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-xs hover:bg-white/95 transition-all duration-200 cursor-pointer select-none">
+                                <div class="flex items-center gap-1.5 text-slate-700 text-xs font-bold uppercase tracking-wider active:scale-95 transition-transform duration-100">
+                                    <i data-lucide="eye" class="w-4 h-4 text-brand-orange animate-pulse"></i>
+                                    Tampilkan Kode
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Button (Reveal -> Copy) -->
+                        <button type="button" onclick="handleAction()" id="actionBtn"
+                                class="w-full py-3.5 px-4 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-95 transition-all duration-150 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i data-lucide="lock" class="w-4 h-4" id="actionIcon"></i>
+                            <span id="actionText">Buka Kode Redeem</span>
+                        </button>
+                    </div>
+
+                    <!-- Expiry Info -->
+                    <div class="border-t border-orange-50 pt-4 flex flex-col items-center text-center space-y-1 font-space">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Masa Berlaku Voucher</span>
+                        <div class="text-sm font-bold text-slate-750 flex items-center gap-1.5 mt-0.5">
+                            <i data-lucide="calendar-clock" class="w-4 h-4 text-brand-orange"></i>
+                            @Model.Voucher?.ExpiryDate.ToString("dd MMMM yyyy")
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let isRevealed = false;
+
+        function revealCode() {
+            if (isRevealed) return;
+
+            const codeBox = document.getElementById("codeBox");
+            const revealOverlay = document.getElementById("revealOverlay");
+            const actionText = document.getElementById("actionText");
+            const actionIcon = document.getElementById("actionIcon");
+            const actionBtn = document.getElementById("actionBtn");
+
+            // Unblur code
+            codeBox.classList.remove("blur-md", "select-none", "pointer-events-none");
+            codeBox.classList.add("select-all", "pointer-events-auto");
+            
+            // Hide overlay
+            revealOverlay.classList.add("hidden");
+
+            // Change button to Copy style
+            actionText.innerText = "Salin Kode";
+            actionIcon.setAttribute("data-lucide", "copy");
+            actionBtn.classList.remove("bg-slate-100", "hover:bg-slate-200", "text-slate-700");
+            actionBtn.classList.add("bg-brand-orange", "hover:bg-brand-orange-hover", "text-white");
+            
+            // Re-render lucide icon
+            lucide.createIcons();
+
+            isRevealed = true;
+
+            // Trigger Click Telemetry (background network request)
+            fetch(`?handler=TrackClick&id=@Model.Voucher?.Id`)
+                .then(response => response.json())
+                .then(data => console.log("Click tracked successfully:", data))
+                .catch(err => console.error("Telemetry failed:", err));
+        }
+
+        function handleAction() {
+            if (!isRevealed) {
+                revealCode();
+            } else {
+                copyRedeemCode();
+            }
+        }
+
+        function copyRedeemCode() {
+            const code = document.getElementById("codeBox").innerText.trim();
+            navigator.clipboard.writeText(code).then(() => {
+                const actionText = document.getElementById("actionText");
+                const actionIcon = document.getElementById("actionIcon");
+                const actionBtn = document.getElementById("actionBtn");
+
+                actionText.innerText = "Tersalin!";
+                actionIcon.setAttribute("data-lucide", "check");
+                actionBtn.classList.remove("bg-brand-orange", "hover:bg-brand-orange-hover", "text-white");
+                actionBtn.classList.add("bg-emerald-500", "hover:bg-emerald-600", "text-white");
+                lucide.createIcons();
+
+                setTimeout(() => {
+                    actionText.innerText = "Salin Kode";
+                    actionIcon.setAttribute("data-lucide", "copy");
+                    actionBtn.classList.remove("bg-emerald-500", "hover:bg-emerald-600");
+                    actionBtn.classList.add("bg-brand-orange", "hover:bg-brand-orange-hover");
+                    lucide.createIcons();
+                }, 2000);
+            }).catch(err => {
+                console.error("Gagal menyalin kode:", err);
+            });
+        }
+    </script>
+}
