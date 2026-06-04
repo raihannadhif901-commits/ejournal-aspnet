@@ -10,7 +10,7 @@ Proyek ini dibangun menggunakan **ASP.NET Core (Razor Pages)** dan **Tailwind CS
 
 ---
 
-## 🚀 Fitur Utama
+## Fitur Utama
 
 ### 1. Katalog Promo Dinamis (`/Promos`)
 *   **Tampilan Klien Modern**: Desain bersih bertema oranye khas brand Linknet yang menyatu, menggunakan kombinasi tipografi atraktif (**Space Grotesk** untuk tajuk & **Plus Jakarta Sans** untuk teks isi).
@@ -31,7 +31,7 @@ Proyek ini dibangun menggunakan **ASP.NET Core (Razor Pages)** dan **Tailwind CS
 
 ---
 
-## 🛠️ Stack Teknologi
+## Stack Teknologi
 
 | Komponen | Teknologi | Keterangan |
 | :--- | :--- | :--- |
@@ -44,7 +44,7 @@ Proyek ini dibangun menggunakan **ASP.NET Core (Razor Pages)** dan **Tailwind CS
 
 ---
 
-## 📂 Struktur Proyek Utama
+## Struktur Proyek Utama
 
 ```text
 ├── Data/
@@ -69,7 +69,7 @@ Proyek ini dibangun menggunakan **ASP.NET Core (Razor Pages)** dan **Tailwind CS
 
 ---
 
-## 💻 Cara Menjalankan di Lokal
+## Cara Menjalankan di Lokal
 
 ### Prasyarat
 1.  **.NET 8.0 SDK** terpasang di komputer Anda.
@@ -98,7 +98,7 @@ Setelah server menyala, buka browser Anda di alamat: **`http://localhost:5000`**
 
 ---
 
-## 🧪 Skenario Pengujian Demo Portofolio
+## Skenario Pengujian Demo Portofolio
 
 1.  **Akses Katalog**: Buka halaman utama. Anda langsung melihat katalog berisi 6 voucher awal dengan tema oranye Linknet yang memukau. Klik tombol halaman **2** di bagian bawah untuk melihat sisa voucher.
 2.  **Uji Penyingkapan Kode**: Pilih voucher *Starbucks Coffee*, klik **Tampilkan Kode**. Kode voucher akan ter-unblur secara halus dan tombol berubah menjadi **Salin Kode**. Klik sekali lagi untuk menyalin ke clipboard.
