@@ -1,110 +1,89 @@
-# First Media Privilege Vouchers Portal
+# NetPulse.io | Real-Time NOC Operations & Bandwidth Diagnostics Dashboard
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/raihannadhif901-commits/firstmedia-voucher-privilege)
-[![.NET Core](https://img.shields.io/badge/.NET-8.0-blueviolet.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-38bdf8.svg)](https://tailwindcss.com/)
-[![SQLite](https://img.shields.io/badge/SQLite-3.0-003b57.svg)](https://www.sqlite.org/)
-
-Portal Katalog & Manajemen Voucher Privilege eksklusif untuk pelanggan setia **First Media (PT Link Net Tbk)**. Aplikasi ini dirancang dengan antarmuka yang modern, responsif (*mobile-first*), berkinerja tinggi, dan dilengkapi fitur telemetri pelacakan klik pengguna serta visualisasi analitik grafik di sisi admin.
-
-Proyek ini dibangun menggunakan **ASP.NET Core (Razor Pages)** dan **Tailwind CSS v4** dengan database **SQLite** untuk mendukung kemudahan portabilitas demo lokal tanpa konfigurasi database eksternal yang rumit.
+NetPulse is a lightweight, high-performance **NOC (Network Operations Center) monitoring dashboard** designed for telecom engineers and network administrators. Built on **.NET 8** and **SignalR**, it performs parallel SNMP/ICMP diagnostics across multiple target routers, maps OID configurations dynamically based on ONT brand profiles, runs automated traceroutes on performance degradation, and features a self-hosted CDN-based internet speed test with a modern, circular progress ring.
 
 ---
 
-## Fitur Utama
+## 📸 Overview & Architecture
 
-### 1. Katalog Promo Dinamis (`/Promos`)
-*   **Tampilan Klien Modern**: Desain bersih bertema oranye khas brand Linknet yang menyatu, menggunakan kombinasi tipografi atraktif (**Space Grotesk** untuk tajuk & **Plus Jakarta Sans** untuk teks isi).
-*   **Filter Kategori Instan**: Menyaring promo (F&B, Entertainment, Shopping, Transport) secara dinamis menggunakan parameter query terintegrasi.
-*   **Pagination Terintegrasi**: Membagi katalog voucher secara rapi (konfigurasi default: 6 voucher per halaman) untuk mengoptimalkan waktu muat halaman pada perangkat mobile.
+NetPulse operates as a self-contained web application. The backend runs background tasks that scan active network targets in parallel, while SignalR pushes live telemetry directly to the web client.
 
-### 2. Sensor Kode & Salin Otomatis (`/VoucherDetail`)
-*   **Interactive Reveal Code**: Kode redeem disamarkan secara visual (*blurred*) saat halaman pertama kali dimuat untuk memberikan kesan interaktif.
-*   **Smart Action Button**: Tombol unblur bertransisi secara dinamis menjadi tombol **"Salin Kode"** (*Copy to Clipboard*) dengan umpan balik visual "Tersalin!" berwarna hijau setelah disalin.
-
-### 3. Dashboard Admin & Telemetri Analitik (`/Admin`)
-*   **Click Telemetry**: Setiap klik penyingkapan kode voucher direkam secara asinkron (*background fetch API*) ke dalam database SQLite.
-*   **Statistik Ringkasan (Stat Cards)**: Menampilkan metrik *real-time* mengenai Total Voucher, Total Klik akumulatif, dan nama Mitra Terpopuler (beserta jumlah tayangannya).
-*   **Visualisasi Grafik (Chart.js)**:
-    *   *Bar Chart* (Grafik Batang) menampilkan **Top 5 Voucher Terpopuler** berdasarkan jumlah klik terbanyak.
-    *   *Doughnut Chart* (Grafik Donat) menampilkan **Porsi Distribusi Klik per Kategori Promo**.
-*   **Manajemen CRUD Voucher**: Formulir pembuatan voucher baru yang divalidasi, lengkap dengan tombol **Demo Image Templates** untuk mengisi URL gambar Unsplash secara instan saat pengujian.
-
----
-
-## Stack Teknologi
-
-| Komponen | Teknologi | Keterangan |
-| :--- | :--- | :--- |
-| **Backend Framework** | ASP.NET Core (Razor Pages) | Runtime .NET 8.0 (LTS) - Server-Side Rendered (SSR) |
-| **Database** | SQLite | File-based local database (`firstmedia_vouchers.db`) |
-| **ORM / Data Access** | Entity Framework Core 8.0.12 | Pemetaan objek data secara aman & proteksi SQL Injection |
-| **Frontend Styling** | Tailwind CSS v4 | Utility-first CSS dengan kompilasi NPM CLI tercepat |
-| **Typography** | Space Grotesk & Plus Jakarta Sans | Google Fonts kombinasi modern untuk keterbacaan tinggi |
-| **Analitik & Ikon** | Chart.js & Lucide Icons | Visualisasi grafik interaktif & ikon vektor SVG |
-
----
-
-## Struktur Proyek Utama
-
-```text
-├── Data/
-│   ├── AppDbContext.cs       # Konfigurasi tabel EF Core
-│   └── DbInitializer.cs      # Seeding otomatis 12 voucher dummy awal
-├── Models/
-│   └── Voucher.cs            # Model data Voucher & Telemetri
-├── Pages/
-│   ├── Admin/
-│   │   ├── Create.cshtml     # Form input voucher baru (admin)
-│   │   └── Index.cshtml      # Dashboard visualisasi & tabel CRUD
-│   ├── Promos.cshtml         # Katalog ber-paginasi & kategori filter
-│   ├── VoucherDetail.cshtml  # Detail voucher, unblur code & copy utility
-│   └── Shared/_Layout.cshtml # Master layout bertema oranye & Google Fonts
-├── Styles/
-│   └── input.css             # Berkas konfigurasi Tailwind v4 & keyframes
-├── wwwroot/
-│   ├── css/site.css          # Hasil kompilasi akhir CSS Tailwind
-│   └── icon.png              # File logo resmi Linknet/First Media
-└── Program.cs                # Entry-point bootstrap aplikasi & seeding
+```mermaid
+graph TD
+    A[NOC Web Client] <-->|SignalR WebSockets & REST APIs| B[ASP.NET Core Server]
+    B <-->|EF Core ORM| C[(SQLite Database)]
+    B -->|Parallel Ping Sweeps / ICMP| D[Active Network Targets]
+    B -->|SNMP OID Polling| E[ONT Device Interface WAN Ports]
+    B -->|HEAD / GET / POST Streams| F[Cloudflare CDN Speedtest]
 ```
 
 ---
 
-## Cara Menjalankan di Lokal
+## ⚡ Core Features
 
-### Prasyarat
-1.  **.NET 8.0 SDK** terpasang di komputer Anda.
-2.  **Node.js & NPM** terpasang untuk me-build aset Tailwind CSS.
-
-### Langkah 1: Klon & Masuk ke Direktori Proyek
-```bash
-git clone <url-repositori-anda>
-cd firstmedia-voucher-privilege
-```
-
-### Langkah 2: Build Aset CSS Tailwind
-Pasang dependensi CLI Tailwind dan lakukan kompilasi:
-```bash
-npm install
-npm run build:css
-```
-*(Gunakan `npm run watch:css` di terminal terpisah jika ingin memodifikasi tampilan agar CSS terkompilasi secara otomatis saat file diubah).*
-
-### Langkah 3: Jalankan Aplikasi
-Jalankan perintah berikut untuk menjalankan server lokal:
-```bash
-dotnet watch
-```
-Setelah server menyala, buka browser Anda di alamat: **`http://localhost:5000`** (atau port lain yang tertera di terminal).
+*   🚀 **Parallel ICMP & SNMP Scanning Engine**: Monitors latency, jitter, packet loss, WAN link state, interface speed, and GPON Rx Optical Power (`dBm`) in parallel threads using `Task.WhenAll`.
+*   🔄 **ONT Profiles Mapper (Dynamic OID Configuration)**: Allows technicians to register and map custom SNMP OIDs per ONT brand (e.g., Huawei, ZTE, Generic MIB-II) dynamically from the UI.
+*   📈 **Real-Time Data Visualization**: Plots latency and jitter charts on-the-fly using **Chart.js** over a sliding window of historical metrics.
+*   🛡️ **Auto-Traceroute & NOC Alerting**: Triggers an automatic traceroute tool on performance degradation (e.g., packet loss or latency spikes) to localize the network hop causing congestion, printing live alerts with auto-resolve handlers.
+*   🎯 **Multi-Target Selector**: Dynamically switch dashboard monitoring targets via a dropdown menu. The UI instantly swaps chart history and diagnostic logs for the active target.
+*   ⏱️ **Self-Hosted Speed Test (Needle-less Progress Dial)**: Benchmark download/upload bandwidth capability using a zero-configuration Cloudflare CDN setup. Features a modern, needle-less circular progress ring inspired by Fast.com with dynamic stage indicators and color-coding:
+    *   🔴 **Red** (< 10 Mbps): Low-bandwidth link.
+    *   🟡 **Yellow** (10–50 Mbps): Medium-bandwidth link.
+    *   🟢 **Green** (>= 50 Mbps): High-bandwidth link.
+*   🎨 **Sleek Light/Dark Mode**: Transition entire layouts, charts, forms, and custom badges instantly with a premium glassmorphic visual system.
 
 ---
 
-## Skenario Pengujian Demo Portofolio
+## 🛠️ Technology Stack
 
-1.  **Akses Katalog**: Buka halaman utama. Anda langsung melihat katalog berisi 6 voucher awal dengan tema oranye Linknet yang memukau. Klik tombol halaman **2** di bagian bawah untuk melihat sisa voucher.
-2.  **Uji Penyingkapan Kode**: Pilih voucher *Starbucks Coffee*, klik **Tampilkan Kode**. Kode voucher akan ter-unblur secara halus dan tombol berubah menjadi **Salin Kode**. Klik sekali lagi untuk menyalin ke clipboard.
-3.  **Verifikasi Telemetri Admin**: 
-    *   Buka dashboard admin di menu **Dashboard Admin** (`/Admin`).
-    *   Amati kartu statistik **Total Klik** dan kolom **Klik / Reveal** Starbucks Coffee yang bertambah menjadi `1x`.
-    *   Perhatikan **Bar Chart** dan **Doughnut Chart** yang ikut memperbarui datanya secara grafis dan dinamis secara instan!
-4.  **Tambah Voucher Baru**: Klik **Tambah Voucher Baru** di pojok kanan atas, isi formulir, klik template gambar demo **F&B (Kopi)**, lalu klik **Simpan & Publikasikan**. Kembali ke halaman katalog utama untuk memverifikasi voucher tersebut sudah tampil secara otomatis.
+| Component | Technologies & Libraries |
+| :--- | :--- |
+| **Backend Core** | C# 12, .NET 8 SDK, ASP.NET Core Minimal APIs |
+| **Real-Time Web** | ASP.NET Core SignalR (WebSockets fallback) |
+| **Database & ORM**| SQLite, Entity Framework Core (EF Core) |
+| **Network Protocols**| SharpSnmpLib (SNMP library), System.Net.NetworkInformation |
+| **Frontend Web** | Semantic HTML5, Vanilla CSS3 (HSL Variables, Flexbox, Grid), Vanilla JavaScript (ES6+) |
+| **Data Viz** | Chart.js |
+
+---
+
+## ⚙️ Project Structure Highlights
+
+*   [Services/NetworkMonitoringService.cs](file:///d:/wokwos/Services/NetworkMonitoringService.cs): Parallel monitoring daemon loop. Automatically recreates database tables if schema modifications are detected on startup.
+*   [Services/SpeedTestService.cs](file:///d:/wokwos/Services/SpeedTestService.cs): Custom HTTP stream handler (`ProgressReportingStream`) that intercepts socket bytes read/write buffers to track download/upload speeds, throttled to 150ms broadcasts to prevent web client congestion.
+*   [Services/GatewayDetector.cs](file:///d:/wokwos/Services/GatewayDetector.cs): Auto-detects local default gateway IP addresses natively across platforms.
+*   [Program.cs](file:///d:/wokwos/Program.cs): Registers services and configures routes for targets, ONT profiles, and speed test APIs.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+*   [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+*   Visual Studio 2022 or VS Code
+
+### Installation & Execution
+
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/your-username/netpulse-dashboard.git
+    cd netpulse-dashboard
+    ```
+2.  **Restore dependencies and build**:
+    ```bash
+    dotnet restore
+    dotnet build
+    ```
+3.  **Run the application**:
+    ```bash
+    dotnet run
+    ```
+4.  **Open the dashboard**:
+    Access [http://localhost:5192](http://localhost:5192) in your browser.
+
+---
+
+## 🛡️ License
+
+This project is open-source and available under the **MIT License**.

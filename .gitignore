@@ -1,0 +1,21 @@
+# Build folders
+bin/
+obj/
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Database files
+network_monitor.db
+network_monitor.db-journal
+network_monitor.db-shm
+network_monitor.db-wal
+
+# OS files
+.DS_Store
+Thumbs.db

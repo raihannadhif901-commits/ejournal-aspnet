@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetPulse | NOC Diagnostics & Fiber Monitoring</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 12h-4l-3 9L9 3l-3 9H2'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Local JS Libraries -->
+    <script src="chart.js"></script>
+    <script src="signalr.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="logo-area">
+                <span class="brand-text">NetPulse<span class="sub-brand">.io</span></span>
+                <span class="badge badge-noc">NOC EDITION</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-item active" id="nav-dashboard" onclick="switchPanel('dashboard', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    Dashboard
+                </button>
+                <button class="nav-item" id="nav-targets" onclick="switchPanel('targets', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-server"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                    Targets
+                </button>
+                <button class="nav-item" id="nav-profiles" onclick="switchPanel('profiles', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                    ONT Profiles
+                </button>
+                <button class="nav-item" id="nav-speedtest" onclick="switchPanel('speedtest', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather"><path d="M12 2a10 10 0 0 0-7.38 16.74l1.41-1.41a8 8 0 1 1 11.94 0l1.41 1.41A10 10 0 0 0 12 2z"></path><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Speed Test
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="theme-switch-container">
+                    <span class="theme-icon" id="theme-icon-dark" title="Dark Mode">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </span>
+                    <label class="theme-switch-label">
+                        <input type="checkbox" id="theme-checkbox" onchange="toggleTheme()">
+                        <span class="theme-slider"></span>
+                    </label>
+                    <span class="theme-icon" id="theme-icon-light" title="Light Mode">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-title-area">
+                    <h1 class="page-title" id="current-panel-title">NOC Operations Dashboard</h1>
+                </div>
+                <div class="nav-info">
+                    <!-- Target Selector Dropdown -->
+                    <div class="target-selector-container">
+                        <span class="label">Target:</span>
+                        <select id="active-target-select" onchange="changeActiveTarget(this.value)">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <span class="badge" id="snmp-status-badge">SNMP: Scanning</span>
+                    <span class="badge" id="net-interface-info">Interface: FTTH Active</span>
+                    <span class="server-time" id="system-time">00:00:00</span>
+                </div>
+            </header>
+
+            <!-- PANEL 1: DASHBOARD -->
+            <div id="panel-dashboard" class="content-panel active">
+                <main class="dashboard-grid">
+                    <!-- COLUMN 1: Real-time Metrics & Physical Port Info -->
+                    <div class="dashboard-col grid-left">
+                        <!-- Card 1: Default Gateway Status -->
+                        <section class="card" id="gateway-card">
+                            <div class="card-header">
+                                <h2>Target Host Status</h2>
+                                <span class="status-dot" id="router-status">Detecting...</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="router-info-row">
+                                    <span class="label">IP Address</span>
+                                    <span class="value val-mono" id="router-ip">0.0.0.0</span>
+                                </div>
+                                <div class="metrics-grid">
+                                    <div class="metric-box">
+                                        <span class="metric-label">Latency</span>
+                                        <span class="metric-value" id="val-latency">0<span class="unit">ms</span></span>
+                                    </div>
+                                    <div class="metric-box">
+                                        <span class="metric-label">Jitter</span>
+                                        <span class="metric-value" id="val-jitter">0<span class="unit">ms</span></span>
+                                    </div>
+                                    <div class="metric-box">
+                                        <span class="metric-label">Packet Loss</span>
+                                        <span class="metric-value" id="val-loss">0<span class="unit">%</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Card 2: Optical Power & Interface Diagnostics -->
+                        <section class="card" id="physical-port-card">
+                            <div class="card-header">
+                                <h2>Fiber Transceiver & Physical Port</h2>
+                                <span class="badge" id="cable-status-badge">Normal</span>
+                            </div>
+                            <div class="card-body">
+                                <!-- Optical Power (dBm) Gauge Area -->
+                                <div class="fiber-gauge-container">
+                                    <div class="fiber-label-row">
+                                        <span class="label">GPON Rx Optical Power</span>
+                                        <span class="value val-mono text-success" id="val-optical-power">-18.5 dBm</span>
+                                    </div>
+                                    <div class="fiber-progress-bg">
+                                        <div class="fiber-progress-bar" id="optical-power-bar" style="width: 75%;"></div>
+                                        <div class="fiber-limit-marker" style="left: 30%;" title="ISP Standard Limit (-27 dBm)"></div>
+                                    </div>
+                                    <div class="fiber-scale">
+                                        <span>-8 dBm</span>
+                                        <span class="marker-danger">-27 dBm (Limit)</span>
+                                        <span>-35 dBm</span>
+                                    </div>
+                                </div>
+
+                                <div class="port-status-header">
+                                    <div class="port-illustration">
+                                        <div class="port-connector" id="rj45-connector"></div>
+                                        <span class="port-name" id="val-port-name">GPON WAN (Fiber Interface)</span>
+                                    </div>
+                                    <div class="port-speed">
+                                        <span class="speed-value" id="val-port-speed">1000</span>
+                                        <span class="speed-unit">Mbps</span>
+                                    </div>
+                                </div>
+                                <div class="port-details">
+                                    <div class="detail-row">
+                                        <span class="label">WAN Link State</span>
+                                        <span class="value" id="val-port-state">UP</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="label">CRC Frame Errors</span>
+                                        <span class="value val-mono text-danger" id="val-crc-errors">0</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="label">ISP Link Profile</span>
+                                        <span class="value" id="val-cable-status">Normal Link</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- COLUMN 2: Graphic Chart & Logs & Traceroute -->
+                    <div class="dashboard-col grid-right-panel">
+                        <!-- Card 4: Historical Chart -->
+                        <section class="card chart-card">
+                            <div class="card-header">
+                                <h2>Real-time Latency & Jitter History</h2>
+                                <div class="chart-legend">
+                                    <span class="legend-item"><span class="legend-color color-latency"></span>Latency (ms)</span>
+                                    <span class="legend-item"><span class="legend-color color-jitter"></span>Jitter (ms)</span>
+                                </div>
+                            </div>
+                            <div class="card-body chart-body">
+                                <canvas id="metricsChart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Card 5: Visual Hop Route Analyzer (Traceroute) -->
+                        <section class="card traceroute-card" id="traceroute-card">
+                            <div class="card-header">
+                                <h2>Visual Hop Route Analyzer (Auto-Traceroute)</h2>
+                                <button class="btn btn-action" id="btn-manual-trace" onclick="triggerManualTraceroute()">Trace Route</button>
+                            </div>
+                            <div class="card-body">
+                                <p class="section-desc">Displays routing hop nodes to localize the source of network congestion:</p>
+                                <div class="traceroute-flow-container" id="traceroute-flow">
+                                    <div class="traceroute-idle">No anomalies detected. Network path is clear.</div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Card 6: Real-time Diagnostic Analysis Logs -->
+                        <section class="card logs-card">
+                            <div class="card-header">
+                                <h2>NOC Diagnostic Alerts</h2>
+                                <span class="badge badge-outline" id="active-alerts-count">0 Active</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="logs-container" id="logs-list">
+                                    <div class="empty-logs">No alerts active. System running normally.</div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+            </div>
+
+            <!-- PANEL 2: TARGETS MANAGEMENT -->
+            <div id="panel-targets" class="content-panel">
+                <div class="admin-panel-grid">
+                    <!-- Form Target -->
+                    <div class="card form-card">
+                        <div class="card-header">
+                            <h2 id="target-form-title">Add Monitoring Target</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="target-form" onsubmit="saveTarget(event)">
+                                <input type="hidden" id="target-id" />
+                                <div class="form-group">
+                                    <label class="form-label" for="target-name">Target Name</label>
+                                    <input type="text" id="target-name" class="form-control" placeholder="e.g. Core OLT Switch" required />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="target-ip">IP Address</label>
+                                    <input type="text" id="target-ip" class="form-control" placeholder="e.g. 192.168.100.1" required />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="target-profile">ONT Brand Profile (SNMP OIDs)</label>
+                                    <select id="target-profile" class="form-control" required>
+                                        <!-- Populated dynamically -->
+                                    </select>
+                                </div>
+                                <div class="form-group row-checkbox">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="target-active" checked />
+                                        <span class="checkbox-label">Active Monitoring</span>
+                                    </label>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-secondary" onclick="resetTargetForm()">Cancel</button>
+                                    <button type="submit" class="btn btn-action">Save Target</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Table Targets -->
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <h2>Registered Monitoring Targets</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>IP Address</th>
+                                            <th>ONT Profile</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="targets-table-body">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 3: ONT PROFILES -->
+            <div id="panel-profiles" class="content-panel">
+                <div class="admin-panel-grid">
+                    <!-- Form Profile -->
+                    <div class="card form-card">
+                        <div class="card-header">
+                            <h2 id="profile-form-title">Add ONT Profile</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="profile-form" onsubmit="saveProfile(event)">
+                                <input type="hidden" id="profile-id" />
+                                <div class="form-group">
+                                    <label class="form-label" for="profile-name">Profile / Brand Name</label>
+                                    <input type="text" id="profile-name" class="form-control" placeholder="e.g. ZTE F609 GPON" required />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="oid-status">OID Port Status</label>
+                                    <input type="text" id="oid-status" class="form-control" value="1.3.6.1.2.1.2.2.1.8.1" required />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="oid-speed">OID Port Speed</label>
+                                    <input type="text" id="oid-speed" class="form-control" value="1.3.6.1.2.1.2.2.1.5.1" required />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="oid-crc">OID CRC Errors</label>
+                                    <input type="text" id="oid-crc" class="form-control" value="1.3.6.1.2.1.2.2.1.14.1" required />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="oid-opt-power">OID Optical Rx Power</label>
+                                    <input type="text" id="oid-opt-power" class="form-control" placeholder="e.g. 1.3.6.1.4.1.3902..." />
+                                    <span class="help-text">Leave blank to use default simulated FO signal strength metrics.</span>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-secondary" onclick="resetProfileForm()">Cancel</button>
+                                    <button type="submit" class="btn btn-action">Save Profile</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Table Profiles -->
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <h2>Configured ONT Profiles</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Brand Name</th>
+                                            <th>OIDs Configuration</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="profiles-table-body">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 4: SPEED TEST -->
+            <div id="panel-speedtest" class="content-panel">
+                <div class="speedtest-layout">
+                    <!-- Gauge Card -->
+                    <div class="card speedometer-card">
+                        <div class="card-header">
+                            <h2>Real-time Bandwidth Speedometer</h2>
+                            <span class="badge" id="speedtest-status-badge">Ready</span>
+                        </div>
+                        <div class="card-body speedtest-flex">
+                            <div class="speedometer-container">
+                                <svg viewBox="0 0 200 200" class="speedometer-svg">
+                                    <defs>
+                                        <linearGradient id="speedGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="var(--color-primary)" />
+                                            <stop offset="100%" stop-color="hsl(195, 100%, 50%)" />
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- Background circle track -->
+                                    <circle class="speed-track" cx="100" cy="100" r="85" fill="none" stroke-width="12" />
+                                    <!-- Active progress circle -->
+                                    <circle class="speed-fill" id="speedometer-fill" cx="100" cy="100" r="85" fill="none" stroke-width="12" stroke="url(#speedGradient)" stroke-dasharray="534" stroke-dashoffset="534" stroke-linecap="round" />
+                                </svg>
+                                
+                                <div class="speedometer-digital">
+                                    <div class="speedometer-icon-wrapper" id="speedometer-icon-container">
+                                        <!-- Will hold icon dynamically -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    </div>
+                                    <span class="speedometer-stage" id="speedometer-stage-label">READY</span>
+                                    <span id="speedometer-value">0.0</span>
+                                    <span class="speedometer-unit" id="speedometer-unit-label">Mbps</span>
+                                </div>
+                            </div>
+                            
+                            <div class="speedtest-controls">
+                                <p class="speedtest-desc">Tests network latency and bandwidth capacity using high-performance public CDN endpoints. No external API keys required.</p>
+                                <button class="btn btn-action btn-speedtest-run" id="btn-run-speedtest" onclick="startSpeedTest()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                    Start Speed Test
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Results Grid -->
+                    <div class="speedtest-results-grid">
+                        <!-- Card 1: Ping / Latency -->
+                        <div class="card result-metric-card" id="card-speed-ping">
+                            <div class="card-body">
+                                <div class="result-icon-wrapper ping-bg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                                </div>
+                                <div class="result-info">
+                                    <span class="result-label">Latency / Ping</span>
+                                    <span class="result-value" id="speedtest-ping">0.0 <span class="unit">ms</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Download Speed -->
+                        <div class="card result-metric-card" id="card-speed-download">
+                            <div class="card-body">
+                                <div class="result-icon-wrapper download-bg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                                </div>
+                                <div class="result-info">
+                                    <span class="result-label">Download Speed</span>
+                                    <span class="result-value" id="speedtest-download">0.0 <span class="unit">Mbps</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Upload Speed -->
+                        <div class="card result-metric-card" id="card-speed-upload">
+                            <div class="card-body">
+                                <div class="result-icon-wrapper upload-bg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                                </div>
+                                <div class="result-info">
+                                    <span class="result-label">Upload Speed</span>
+                                    <span class="result-value" id="speedtest-upload">0.0 <span class="unit">Mbps</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Details / Execution Logs -->
+                    <div class="card logs-card speedtest-log-card">
+                        <div class="card-header">
+                            <h2>Execution Logs</h2>
+                            <span class="badge badge-outline" id="speedtest-progress-percent">0%</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="logs-container" id="speedtest-logs-list">
+                                <div class="empty-logs">Click "Start Speed Test" to begin diagnosing bandwidth.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
