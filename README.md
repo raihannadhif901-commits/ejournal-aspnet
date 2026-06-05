@@ -1,5 +1,7 @@
 # NetPulse.io | Real-Time NOC Operations & Bandwidth Diagnostics Dashboard
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/raihannadhif901-commits/netpulse-dashboard)
+
 NetPulse is a lightweight, high-performance **NOC (Network Operations Center) monitoring dashboard** designed for telecom engineers and network administrators. Built on **.NET 8** and **SignalR**, it performs parallel SNMP/ICMP diagnostics across multiple target routers, maps OID configurations dynamically based on ONT brand profiles, runs automated traceroutes on performance degradation, and features a self-hosted CDN-based internet speed test with a modern, circular progress ring.
 
 ---
