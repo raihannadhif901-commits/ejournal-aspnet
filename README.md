@@ -12,7 +12,7 @@ An enterprise-grade, lightweight **E-Journal & Peer Review Management System** b
 
 ---
 
-## 🏗️ Double-Blind Peer Review Workflow
+## Double-Blind Peer Review Workflow
 
 This system enforces strict state transitions. The workflow is illustrated in the diagram below:
 
@@ -51,7 +51,7 @@ stateDiagram-v2
 
 ---
 
-## 🔒 Demo Credentials (Automatic Seeding)
+## Demo Credentials (Automatic Seeding)
 
 Upon the first startup, the database is automatically migrated and seeded with these roles:
 
@@ -65,7 +65,7 @@ Upon the first startup, the database is automatically migrated and seeded with t
 
 ---
 
-## 🚀 Getting Started (Run Locally)
+## Getting Started (Run Locally)
 
 ### Prerequisites
 *   [.NET SDK 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
@@ -73,8 +73,8 @@ Upon the first startup, the database is automatically migrated and seeded with t
 ### Quick Run
 1.  **Clone the Repository:**
     ```bash
-    git clone <your-repository-url>
-    cd <repository-directory>
+    git clone <raihannadhif901-commits>
+    cd <ejournal-aspnet>
     ```
 2.  **Build and Start the Application:**
     ```bash
@@ -85,7 +85,7 @@ Upon the first startup, the database is automatically migrated and seeded with t
 
 ---
 
-## 🛡️ Key Security Implementations
+## Key Security Implementations
 
 *   **Folder Isolation:** Submitted manuscripts are kept in the private `/Uploads/` folder. Access is restricted using a secure download controller checking the user's role and database associations (e.g. only assigned reviewers or the author can access the PDF).
 *   **Double-Blind Review:** Reviewers can read abstracts and download PDFs, but author names and academic designations are scrubbed from the reviewer interfaces.
