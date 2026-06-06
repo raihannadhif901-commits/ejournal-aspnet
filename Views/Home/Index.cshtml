@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "Open Access Scientific Journal of Edge Computing";
+}
+
+<!-- Hero Section -->
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="hero-title">Journal of Edge Computing</h1>
+        <p class="hero-subtitle">A premier, double-blind peer-reviewed open access portal for cutting-edge investigations in distributed systems, network latency optimization, and IoT intelligence architectures.</p>
+        <div class="mt-4">
+            <a asp-controller="Archive" asp-action="Index" class="btn-primary-custom px-4">Browse Archives</a>
+            <a asp-controller="Dashboard" asp-action="Index" class="btn-secondary-custom px-4 ms-3">Submit Manuscript</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Main Info Columns -->
+        <div class="col-lg-8">
+            <h3 class="section-title">Latest Announcements</h3>
+            <div class="mb-4">
+                <h5 class="font-weight-bold text-dark mb-1">Call for Papers: Vol. 1 No. 2 (December 2026 Issue)</h5>
+                <p class="text-muted small mb-2">Published: June 2026</p>
+                <p>We are pleased to invite submissions for the upcoming issue of the Journal of Edge Computing. Topics of interest include low-power hardware compilers, container orchestration at the edge, federated learning nodes, and real-time streaming topologies. Authors should consult the <a asp-controller="Home" asp-action="Guidelines">Author Guidelines</a> for formatting specifications.</p>
+            </div>
+            
+            <div class="mb-4 pt-3 border-top">
+                <h5 class="font-weight-bold text-dark mb-1">Journal Indexing & Metadata Standards</h5>
+                <p class="text-muted small mb-2">Published: April 2026</p>
+                <p>Our editorial system embeds Dublin Core metadata in all published manuscripts, facilitating indexing by <strong>Google Scholar</strong>, Crossref, and university search engines. Authors benefit from global visibility and immediate citations.</p>
+            </div>
+        </div>
+
+        <!-- Sidebar Quick Links -->
+        <div class="col-lg-4">
+            <div class="dashboard-card bg-light p-4" style="border-radius: 4px;">
+                <h4 class="font-weight-bold mb-3 text-dark" style="font-family: var(--serif-font);">About the Journal</h4>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a asp-controller="Home" asp-action="FocusScope" class="text-dark">Focus & Scope</a></li>
+                    <li class="mb-2"><a asp-controller="Home" asp-action="EditorialTeam" class="text-dark">Editorial Board</a></li>
+                    <li class="mb-2"><a asp-controller="Home" asp-action="Guidelines" class="text-dark">Author Guidelines</a></li>
+                    <li class="mb-2"><a asp-controller="Home" asp-action="Ethics" class="text-dark">Publication Ethics</a></li>
+                </ul>
+            </div>
+
+            <div class="dashboard-card p-4 mt-4" style="border-radius: 4px;">
+                <h4 class="font-weight-bold mb-3 text-dark" style="font-family: var(--serif-font);">Journal Stats</h4>
+                <table class="w-100 small">
+                    <tr>
+                        <td class="py-1 text-muted">Frequency:</td>
+                        <td class="py-1 text-end font-weight-bold">Bi-annual</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1 text-muted">Review Process:</td>
+                        <td class="py-1 text-end font-weight-bold">Double-blind</td>
+                    </tr>
+                    <tr>
+                        <td class="py-1 text-muted">Acceptance Rate:</td>
+                        <td class="py-1 text-end font-weight-bold">~28%</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

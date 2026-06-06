@@ -1,91 +1,84 @@
-# NetPulse.io | Real-Time NOC Operations & Bandwidth Diagnostics Dashboard
+# 📖 Journal of Edge Computing (JEC) - Editorial & Publishing System
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/raihannadhif901-commits/netpulse-dashboard)
-
-NetPulse is a lightweight, high-performance **NOC (Network Operations Center) monitoring dashboard** designed for telecom engineers and network administrators. Built on **.NET 8** and **SignalR**, it performs parallel SNMP/ICMP diagnostics across multiple target routers, maps OID configurations dynamically based on ONT brand profiles, runs automated traceroutes on performance degradation, and features a self-hosted CDN-based internet speed test with a modern, circular progress ring.
+An enterprise-grade, lightweight **E-Journal & Peer Review Management System** built on **ASP.NET Core 8.0** and **SQLite**. This portal features role-based access control, a secure double-blind manuscript evaluation workflow, and SEO-optimized public archives with Google Scholar indexing support.
 
 ---
 
-## 📸 Overview & Architecture
+## 🏗️ Double-Blind Peer Review Workflow
 
-NetPulse operates as a self-contained web application. The backend runs background tasks that scan active network targets in parallel, while SignalR pushes live telemetry directly to the web client.
+This system enforces strict state transitions. The workflow is illustrated in the diagram below:
 
 ```mermaid
-graph TD
-    A[NOC Web Client] <-->|SignalR WebSockets & REST APIs| B[ASP.NET Core Server]
-    B <-->|EF Core ORM| C[(SQLite Database)]
-    B -->|Parallel Ping Sweeps / ICMP| D[Active Network Targets]
-    B -->|SNMP OID Polling| E[ONT Device Interface WAN Ports]
-    B -->|HEAD / GET / POST Streams| F[Cloudflare CDN Speedtest]
+stateDiagram-v2
+    [*] --> Draft : Author Creates
+    Draft --> Submitted : Author Uploads PDF
+    Submitted --> UnderReview : Editor Assigns Reviewer
+    
+    state UnderReview {
+        [*] --> ReviewPending
+        ReviewPending --> ReviewCompleted : Reviewer Submits Rec
+    }
+    
+    UnderReview --> UnderRevision : Editor Requests Revisions
+    UnderRevision --> Submitted : Author Uploads Revision PDF
+    
+    UnderReview --> Rejected : Editor Rejects
+    UnderReview --> Accepted : Editor Accepts
+    
+    Accepted --> Published : Editor Assigns Volume & DOI
+    Published --> [*]
 ```
-
----
-
-## ⚡ Core Features
-
-*   🚀 **Parallel ICMP & SNMP Scanning Engine**: Monitors latency, jitter, packet loss, WAN link state, interface speed, and GPON Rx Optical Power (`dBm`) in parallel threads using `Task.WhenAll`.
-*   🔄 **ONT Profiles Mapper (Dynamic OID Configuration)**: Allows technicians to register and map custom SNMP OIDs per ONT brand (e.g., Huawei, ZTE, Generic MIB-II) dynamically from the UI.
-*   📈 **Real-Time Data Visualization**: Plots latency and jitter charts on-the-fly using **Chart.js** over a sliding window of historical metrics.
-*   🛡️ **Auto-Traceroute & NOC Alerting**: Triggers an automatic traceroute tool on performance degradation (e.g., packet loss or latency spikes) to localize the network hop causing congestion, printing live alerts with auto-resolve handlers.
-*   🎯 **Multi-Target Selector**: Dynamically switch dashboard monitoring targets via a dropdown menu. The UI instantly swaps chart history and diagnostic logs for the active target.
-*   ⏱️ **Self-Hosted Speed Test (Needle-less Progress Dial)**: Benchmark download/upload bandwidth capability using a zero-configuration Cloudflare CDN setup. Features a modern, needle-less circular progress ring inspired by Fast.com with dynamic stage indicators and color-coding:
-    *   🔴 **Red** (< 10 Mbps): Low-bandwidth link.
-    *   🟡 **Yellow** (10–50 Mbps): Medium-bandwidth link.
-    *   🟢 **Green** (>= 50 Mbps): High-bandwidth link.
-*   🎨 **Sleek Light/Dark Mode**: Transition entire layouts, charts, forms, and custom badges instantly with a premium glassmorphic visual system.
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Component | Technologies & Libraries |
-| :--- | :--- |
-| **Backend Core** | C# 12, .NET 8 SDK, ASP.NET Core Minimal APIs |
-| **Real-Time Web** | ASP.NET Core SignalR (WebSockets fallback) |
-| **Database & ORM**| SQLite, Entity Framework Core (EF Core) |
-| **Network Protocols**| SharpSnmpLib (SNMP library), System.Net.NetworkInformation |
-| **Frontend Web** | Semantic HTML5, Vanilla CSS3 (HSL Variables, Flexbox, Grid), Vanilla JavaScript (ES6+) |
-| **Data Viz** | Chart.js |
+*   **Backend Framework:** ASP.NET Core 8.0 (MVC / Razor Pages)
+*   **Database (ORM):** SQLite + Entity Framework Core 8.0
+*   **Security & Auth:** Claims-based Cookie Authentication (Custom claims)
+*   **Cryptography:** PBKDF2 with SHA-256 for secure password hashing
+*   **Storage System:** Secure Private File Directory (Manuscripts are stored outside the public `wwwroot` folder prior to publication)
+*   **Styling (UI):** Premium, custom-engineered Academic Vanilla CSS (featuring *Playfair Display* & *Inter* typography)
+*   **SEO Integration:** Dynamic Dublin Core metadata injection for Google Scholar indexing
 
 ---
 
-## ⚙️ Project Structure Highlights
+## 🔒 Demo Credentials (Automatic Seeding)
 
-*   [Services/NetworkMonitoringService.cs](file:///d:/wokwos/Services/NetworkMonitoringService.cs): Parallel monitoring daemon loop. Automatically recreates database tables if schema modifications are detected on startup.
-*   [Services/SpeedTestService.cs](file:///d:/wokwos/Services/SpeedTestService.cs): Custom HTTP stream handler (`ProgressReportingStream`) that intercepts socket bytes read/write buffers to track download/upload speeds, throttled to 150ms broadcasts to prevent web client congestion.
-*   [Services/GatewayDetector.cs](file:///d:/wokwos/Services/GatewayDetector.cs): Auto-detects local default gateway IP addresses natively across platforms.
-*   [Program.cs](file:///d:/wokwos/Program.cs): Registers services and configures routes for targets, ONT profiles, and speed test APIs.
+Upon the first startup, the database is automatically migrated and seeded with these roles:
+
+| Role | Email | Password | Access Rights |
+| :--- | :--- | :--- | :--- |
+| **Chief Editor** | `editor@journal.com` | `Editor123!` | Process submissions, assign reviewers, publish issues |
+| **Dr. Alice (Reviewer 1)** | `reviewer1@journal.com` | `Reviewer123!` | Double-blind review queue, submit recommendations |
+| **Prof. Bob (Reviewer 2)** | `reviewer2@journal.com` | `Reviewer123!` | Double-blind review queue, submit recommendations |
+| **Dr. John Doe (Author)** | `author@journal.com` | `Author123!` | Submit manuscripts, review feedback, upload revisions |
+| **System Admin** | `admin@journal.com` | `Admin123!` | Full control over users and settings |
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Run Locally)
 
 ### Prerequisites
+*   [.NET SDK 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 
-*   [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-*   Visual Studio 2022 or VS Code
-
-### Installation & Execution
-
-1.  **Clone the repository**:
+### Quick Run
+1.  **Clone the Repository:**
     ```bash
-    git clone https://github.com/your-username/netpulse-dashboard.git
-    cd netpulse-dashboard
+    git clone <your-repository-url>
+    cd <repository-directory>
     ```
-2.  **Restore dependencies and build**:
-    ```bash
-    dotnet restore
-    dotnet build
-    ```
-3.  **Run the application**:
+2.  **Build and Start the Application:**
     ```bash
     dotnet run
     ```
-4.  **Open the dashboard**:
-    Access [http://localhost:5192](http://localhost:5192) in your browser.
+3.  **Access the Portal:**
+    Open your browser and navigate to **`http://localhost:5077`**. The database will automatically initialize (`ejournal.db`) and seed the demo data.
 
 ---
 
-## 🛡️ License
+## 🛡️ Key Security Implementations
 
-This project is open-source and available under the **MIT License**.
+*   **Folder Isolation:** Submitted manuscripts are kept in the private `/Uploads/` folder. Access is restricted using a secure download controller checking the user's role and database associations (e.g. only assigned reviewers or the author can access the PDF).
+*   **Double-Blind Review:** Reviewers can read abstracts and download PDFs, but author names and academic designations are scrubbed from the reviewer interfaces.
+*   **SQL Injection & XSS Protection:** EF Core parameterized queries block SQL injection, while ASP.NET Razor HTML-encodes all dynamic text values automatically.

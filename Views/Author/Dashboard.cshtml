@@ -1,0 +1,72 @@
+@model IEnumerable<EJournal.Models.Article>
+@{
+    ViewData["Title"] = "Author Dashboard";
+}
+
+<div class="row">
+    <!-- Sidebar navigation -->
+    <div class="col-md-3">
+        <div class="dashboard-sidebar">
+            <h4 class="font-weight-bold text-dark mb-4" style="font-family: var(--serif-font);">Author Panel</h4>
+            <a asp-controller="Author" asp-action="Dashboard" class="sidebar-nav-link active">My Submissions</a>
+            <a asp-controller="Author" asp-action="Submit" class="sidebar-nav-link">Submit New Paper</a>
+            <hr />
+            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-nav-link">Home Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Main board -->
+    <div class="col-md-9">
+        <div class="dashboard-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title mb-0" style="border-bottom: none; padding-bottom: 0;">My Submissions</h2>
+                <a asp-controller="Author" asp-action="Submit" class="btn-primary-custom btn-sm">Submit New Article</a>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-secondary py-4 text-center">
+                    <p class="mb-0 text-muted">You have not submitted any manuscripts yet.</p>
+                </div>
+            }
+            else
+            {
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date Submitted</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var article in Model)
+                        {
+                            <tr>
+                                <td style="max-width: 300px; font-weight: 500;">
+                                    <a asp-controller="Author" asp-action="Details" asp-route-id="@article.Id" class="text-dark">
+                                        @article.Title
+                                    </a>
+                                </td>
+                                <td>@article.SubmittedAt.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <span class="status-badge status-@(article.Status.ToString().ToLower())">
+                                        @article.Status
+                                    </span>
+                                </td>
+                                <td>@article.LastUpdatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>
+                                    <a asp-controller="Author" asp-action="Details" asp-route-id="@article.Id" class="btn-secondary-custom btn-sm py-1 px-2">
+                                        Manage
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

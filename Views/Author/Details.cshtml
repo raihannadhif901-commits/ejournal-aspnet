@@ -1,0 +1,107 @@
+@model EJournal.Models.Article
+@{
+    ViewData["Title"] = "Manuscript Details";
+}
+
+<div class="row">
+    <!-- Sidebar navigation -->
+    <div class="col-md-3">
+        <div class="dashboard-sidebar">
+            <h4 class="font-weight-bold text-dark mb-4" style="font-family: var(--serif-font);">Author Panel</h4>
+            <a asp-controller="Author" asp-action="Dashboard" class="sidebar-nav-link active">My Submissions</a>
+            <a asp-controller="Author" asp-action="Submit" class="sidebar-nav-link">Submit New Paper</a>
+            <hr />
+            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-nav-link">Home Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Main board -->
+    <div class="col-md-9">
+        <div class="dashboard-card">
+            <h2 class="section-title">Submission Details</h2>
+
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h3 style="font-family: var(--serif-font); font-weight: 700; color: var(--primary-color);">@Model.Title</h3>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <span class="status-badge status-@(Model.Status.ToString().ToLower())" style="font-size: 1rem; padding: 0.4rem 1rem;">
+                        @Model.Status
+                    </span>
+                </div>
+            </div>
+
+            <!-- PDF Link -->
+            <div class="bg-light p-3 rounded mb-4 d-flex justify-content-between align-items-center">
+                <span><strong>File:</strong> @Model.FilePath</span>
+                <a asp-controller="Archive" asp-action="Download" asp-route-filename="@Model.FilePath" class="btn-secondary-custom btn-sm">
+                    Download PDF
+                </a>
+            </div>
+
+            <!-- Revision Form if status is UnderRevision -->
+            @if (Model.Status == ArticleStatus.UnderRevision)
+            {
+                <div class="card border-warning mb-4">
+                    <div class="card-header bg-warning text-dark font-weight-bold">
+                        Action Required: Submit Revision
+                    </div>
+                    <div class="card-body">
+                        <p>The editor has requested revisions. Please review the reviewer comments below, update your manuscript, and upload the revised PDF file here.</p>
+                        
+                        <form asp-controller="Author" asp-action="SubmitRevision" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="articleId" value="@Model.Id" />
+                            
+                            <div class="form-group-custom">
+                                <label class="form-label-custom" for="pdfFile">Revised PDF Manuscript (Anonymized)</label>
+                                <input type="file" id="pdfFile" name="pdfFile" class="form-control" accept="application/pdf" required />
+                            </div>
+
+                            <button type="submit" class="btn-primary-custom btn-sm">Upload Revision</button>
+                        </form>
+                    </div>
+                </div>
+            }
+
+            <!-- Review Reports -->
+            <h4 class="font-weight-bold text-dark mt-5 mb-3" style="font-family: var(--serif-font);">Peer Review Reports</h4>
+            @if (!Model.ReviewAssignments.Any(r => r.Status == ReviewStatus.Completed))
+            {
+                <p class="text-muted">No review reports have been finalized yet.</p>
+            }
+            else
+            {
+                int revIndex = 1;
+                @foreach (var review in Model.ReviewAssignments.Where(r => r.Status == ReviewStatus.Completed))
+                {
+                    <div class="card mb-3 border-light">
+                        <div class="card-header bg-light font-weight-bold">
+                            Reviewer #@revIndex Recommendation: <span class="text-primary">@review.Recommendation</span>
+                        </div>
+                        <div class="card-body p-3">
+                            <p class="mb-0"><strong>Comments:</strong></p>
+                            <p class="text-secondary whitespace-pre-line">@review.CommentsForAuthor</p>
+                        </div>
+                    </div>
+                    revIndex++;
+                }
+            }
+
+            <!-- Audit Logs -->
+            <h4 class="font-weight-bold text-dark mt-5 mb-3" style="font-family: var(--serif-font);">Submission History</h4>
+            <ul class="list-group list-group-flush border-top border-bottom small">
+                @foreach (var log in Model.History)
+                {
+                    <li class="list-group-item px-0 py-2">
+                        <div class="d-flex w-100 justify-content-between">
+                            <strong class="text-dark">@log.Action</strong>
+                            <span class="text-muted">@log.CreatedAt.ToString("yyyy-MM-dd HH:mm")</span>
+                        </div>
+                        <p class="mb-0 text-muted">@log.Remarks</p>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

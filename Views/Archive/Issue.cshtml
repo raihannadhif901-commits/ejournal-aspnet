@@ -1,0 +1,62 @@
+@model EJournal.Models.Volume
+@{
+    ViewData["Title"] = $"Vol {Model.VolumeNumber} No {Model.IssueNumber} ({Model.Year})";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Archive" asp-action="Index" class="text-dark">Archives</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Vol @Model.VolumeNumber No @Model.IssueNumber</li>
+            </ol>
+        </nav>
+
+        <h2 class="section-title mt-2">
+            Volume @Model.VolumeNumber, Issue @Model.IssueNumber (@Model.Year)
+        </h2>
+        
+        <p class="text-muted mb-4">Table of contents for this issue. All articles are licensed under Open Access.</p>
+
+        @if (Model.Articles == null || !Model.Articles.Any())
+        {
+            <div class="alert alert-secondary">
+                No articles are available in this issue.
+            </div>
+        }
+        else
+        {
+            <div class="mt-4">
+                @foreach (var article in Model.Articles)
+                {
+                    <div class="dashboard-card mb-4">
+                        <h4 class="mb-2" style="font-family: var(--serif-font); font-weight: 700; line-height: 1.3;">
+                            <a asp-controller="Archive" asp-action="Article" asp-route-id="@article.Id" class="text-dark text-decoration-none">
+                                @article.Title
+                            </a>
+                        </h4>
+                        
+                        <div class="text-muted small mb-3">
+                            <span>By @(article.Author?.Name ?? "Anonymous Author")</span>
+                            <span class="mx-2">|</span>
+                            <span>DOI: @(article.Doi ?? "N/A")</span>
+                        </div>
+
+                        <p class="text-secondary small mb-3">
+                            @(article.Abstract.Length > 280 ? article.Abstract.Substring(0, 277) + "..." : article.Abstract)
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-controller="Archive" asp-action="Article" asp-route-id="@article.Id" class="btn-secondary-custom btn-sm">
+                                View Abstract
+                            </a>
+                            <a asp-controller="Archive" asp-action="Download" asp-route-filename="@article.FilePath" class="btn-primary-custom btn-sm">
+                                PDF Download
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

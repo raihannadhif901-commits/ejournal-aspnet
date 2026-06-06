@@ -1,0 +1,95 @@
+@model IEnumerable<EJournal.Models.ReviewAssignment>
+@{
+    ViewData["Title"] = "Reviewer Dashboard";
+}
+
+<div class="row">
+    <!-- Sidebar navigation -->
+    <div class="col-md-3">
+        <div class="dashboard-sidebar">
+            <h4 class="font-weight-bold text-dark mb-4" style="font-family: var(--serif-font);">Reviewer Panel</h4>
+            <a asp-controller="Reviewer" asp-action="Dashboard" class="sidebar-nav-link active">Assigned Articles</a>
+            <hr />
+            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-nav-link">Home Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Main board -->
+    <div class="col-md-9">
+        <div class="dashboard-card">
+            <h2 class="section-title">Peer Review Assignments</h2>
+            
+            <p class="text-muted">Below are the articles assigned to you for double-blind peer review. To ensure fairness, author details have been fully anonymized.</p>
+
+            <h4 class="font-weight-bold text-dark mt-4 mb-3" style="font-family: var(--serif-font);">Pending Reviews</h4>
+            @if (!Model.Any(a => a.Status == ReviewStatus.Pending))
+            {
+                <div class="alert alert-secondary py-3">
+                    <p class="mb-0 text-muted">You have no pending peer review assignments.</p>
+                </div>
+            }
+            else
+            {
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Article Title</th>
+                            <th>Assigned Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var assignment in Model.Where(a => a.Status == ReviewStatus.Pending))
+                        {
+                            <tr>
+                                <td style="font-weight: 500; max-width: 350px;">
+                                    @(assignment.Article?.Title ?? "Untitled Paper")
+                                </td>
+                                <td>@assignment.AssignedAt.ToString("yyyy-MM-dd")</td>
+                                <td><span class="status-badge status-underreview">Pending Review</span></td>
+                                <td>
+                                    <a asp-controller="Reviewer" asp-action="Review" asp-route-id="@assignment.Id" class="btn-primary-custom btn-sm py-1 px-3">
+                                        Perform Review
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <h4 class="font-weight-bold text-dark mt-5 mb-3" style="font-family: var(--serif-font);">Completed Reviews</h4>
+            @if (!Model.Any(a => a.Status == ReviewStatus.Completed))
+            {
+                <p class="text-muted small">You haven't completed any review assignments yet.</p>
+            }
+            else
+            {
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Article Title</th>
+                            <th>Completed Date</th>
+                            <th>Your Recommendation</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var assignment in Model.Where(a => a.Status == ReviewStatus.Completed))
+                        {
+                            <tr>
+                                <td style="max-width: 350px;">
+                                    @(assignment.Article?.Title ?? "Untitled Paper")
+                                </td>
+                                <td>@assignment.CompletedAt?.ToString("yyyy-MM-dd")</td>
+                                <td class="font-weight-bold text-primary">@assignment.Recommendation</td>
+                                <td><span class="status-badge status-accepted">Completed</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

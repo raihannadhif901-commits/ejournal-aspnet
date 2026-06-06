@@ -1,0 +1,82 @@
+@model EJournal.Models.ReviewAssignment
+@{
+    ViewData["Title"] = "Submit Peer Review";
+}
+
+<div class="row">
+    <!-- Sidebar navigation -->
+    <div class="col-md-3">
+        <div class="dashboard-sidebar">
+            <h4 class="font-weight-bold text-dark mb-4" style="font-family: var(--serif-font);">Reviewer Panel</h4>
+            <a asp-controller="Reviewer" asp-action="Dashboard" class="sidebar-nav-link active">Assigned Articles</a>
+            <hr />
+            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-nav-link">Home Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Main board -->
+    <div class="col-md-9">
+        <div class="dashboard-card">
+            <h2 class="section-title">Perform Peer Review</h2>
+
+            <div class="mb-4">
+                <h3 style="font-family: var(--serif-font); font-weight: 700; color: var(--primary-color);">
+                    @(Model.Article?.Title ?? "Untitled Paper")
+                </h3>
+            </div>
+
+            <!-- Double-blind abstract -->
+            <h5 class="font-weight-bold text-dark mb-2" style="font-family: var(--serif-font);">Manuscript Abstract:</h5>
+            <div class="article-abstract-box mb-4">
+                <p>@(Model.Article?.Abstract ?? "No abstract provided.")</p>
+            </div>
+
+            <!-- PDF Access -->
+            <div class="bg-light p-3 rounded mb-4 d-flex justify-content-between align-items-center">
+                <span><strong>Manuscript PDF (Anonymized):</strong> @Model.Article?.FilePath</span>
+                <a asp-controller="Archive" asp-action="Download" asp-route-filename="@Model.Article?.FilePath" class="btn-secondary-custom btn-sm">
+                    Download & Read PDF
+                </a>
+            </div>
+
+            <hr class="my-4" />
+
+            <form asp-controller="Reviewer" asp-action="Review" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Recommendation Selector -->
+                <div class="form-group-custom">
+                    <label class="form-label-custom" for="recommendation">Your Editorial Recommendation</label>
+                    <select id="recommendation" name="recommendation" class="form-input-custom" required>
+                        <option value="">-- Select Recommendation --</option>
+                        <option value="Accept">Accept Submission</option>
+                        <option value="Revision">Revisions Required</option>
+                        <option value="Reject">Reject Submission</option>
+                    </select>
+                </div>
+
+                <!-- Comments for Author -->
+                <div class="form-group-custom">
+                    <label class="form-label-custom" for="commentsForAuthor">Comments for the Author (Shared Anonymously)</label>
+                    <textarea id="commentsForAuthor" name="commentsForAuthor" rows="6" class="form-input-custom" required 
+                              placeholder="Provide constructive feedback, highlight issues, and outline requested revisions. Do not include your name or identifying details."></textarea>
+                </div>
+
+                <!-- Comments for Editor -->
+                <div class="form-group-custom">
+                    <label class="form-label-custom" for="commentsForEditor">Confidential Comments for the Editor (Private)</label>
+                    <textarea id="commentsForEditor" name="commentsForEditor" rows="4" class="form-input-custom"
+                              placeholder="Optional comments visible only to the Chief Editor."></textarea>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <a asp-controller="Reviewer" asp-action="Dashboard" class="btn-secondary-custom me-2">Cancel</a>
+                    <button type="submit" class="btn-primary-custom">Submit Peer Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

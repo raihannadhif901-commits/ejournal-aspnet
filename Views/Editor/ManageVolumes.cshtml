@@ -1,0 +1,95 @@
+@model IEnumerable<EJournal.Models.Volume>
+@{
+    ViewData["Title"] = "Manage Volumes & Issues";
+}
+
+<div class="row">
+    <!-- Sidebar navigation -->
+    <div class="col-md-3">
+        <div class="dashboard-sidebar">
+            <h4 class="font-weight-bold text-dark mb-4" style="font-family: var(--serif-font);">Editor Panel</h4>
+            <a asp-controller="Editor" asp-action="Dashboard" class="sidebar-nav-link">Manage Articles</a>
+            <a asp-controller="Editor" asp-action="ManageVolumes" class="sidebar-nav-link active">Manage Issues</a>
+            <hr />
+            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-nav-link">Home Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Main board -->
+    <div class="col-md-9">
+        <div class="dashboard-card">
+            <h2 class="section-title">Manage Volumes & Issues</h2>
+
+            <div class="row">
+                <!-- Volumes List -->
+                <div class="col-md-7 mb-4">
+                    <h4 class="font-weight-bold text-dark mb-3" style="font-family: var(--serif-font);">Existing Issues</h4>
+                    
+                    @if (!Model.Any())
+                    {
+                        <div class="alert alert-secondary">No volumes or issues exist in the database.</div>
+                    }
+                    else
+                    {
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Volume & Issue</th>
+                                    <th>Year</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var vol in Model)
+                                {
+                                    <tr>
+                                        <td class="font-weight-bold">Volume @vol.VolumeNumber, Issue @vol.IssueNumber</td>
+                                        <td>@vol.Year</td>
+                                        <td>
+                                            @if (vol.IsPublished)
+                                            {
+                                                <span class="status-badge status-accepted">Published</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="status-badge status-draft">Draft</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+
+                <!-- Create Volume Form -->
+                <div class="col-md-5">
+                    <div class="dashboard-card p-3">
+                        <h4 class="font-weight-bold mb-3" style="font-family: var(--serif-font);">Create New Issue</h4>
+                        
+                        <form asp-controller="Editor" asp-action="CreateVolume" method="post">
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom" for="volumeNumber">Volume Number (Integer)</label>
+                                <input type="number" id="volumeNumber" name="volumeNumber" class="form-input-custom" required min="1" placeholder="e.g. 1" />
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom" for="issueNumber">Issue Number (Integer)</label>
+                                <input type="number" id="issueNumber" name="issueNumber" class="form-input-custom" required min="1" placeholder="e.g. 2" />
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom" for="year">Publication Year</label>
+                                <input type="number" id="year" name="year" class="form-input-custom" required min="1990" max="2100" value="2026" />
+                            </div>
+
+                            <button type="submit" class="btn-primary-custom w-100 mt-2">Create Issue</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

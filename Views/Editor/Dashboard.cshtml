@@ -1,0 +1,110 @@
+@model IEnumerable<EJournal.Models.Article>
+@{
+    ViewData["Title"] = "Editor Dashboard";
+}
+
+<div class="row">
+    <!-- Sidebar navigation -->
+    <div class="col-md-3">
+        <div class="dashboard-sidebar">
+            <h4 class="font-weight-bold text-dark mb-4" style="font-family: var(--serif-font);">Editor Panel</h4>
+            <a asp-controller="Editor" asp-action="Dashboard" class="sidebar-nav-link active">Manage Articles</a>
+            <a asp-controller="Editor" asp-action="ManageVolumes" class="sidebar-nav-link">Manage Issues</a>
+            <hr />
+            <a asp-controller="Dashboard" asp-action="Index" class="sidebar-nav-link">Home Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Main board -->
+    <div class="col-md-9">
+        <div class="dashboard-card">
+            <h2 class="section-title">Editor Control Room</h2>
+
+            <h4 class="font-weight-bold text-dark mt-4 mb-3" style="font-family: var(--serif-font);">Active Submissions</h4>
+            @{
+                var activeArticles = Model.Where(a => a.Status != ArticleStatus.Published && a.Status != ArticleStatus.Rejected).ToList();
+            }
+            @if (!activeArticles.Any())
+            {
+                <div class="alert alert-secondary py-3 mb-4">No active submissions in review pipeline.</div>
+            }
+            else
+            {
+                <table class="table-custom mb-4">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Status</th>
+                            <th>Last Activity</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var article in activeArticles)
+                        {
+                            <tr>
+                                <td style="max-width: 250px; font-weight: 500;">@article.Title</td>
+                                <td>@(article.Author?.Name ?? "N/A")</td>
+                                <td>
+                                    <span class="status-badge status-@(article.Status.ToString().ToLower())">
+                                        @article.Status
+                                    </span>
+                                </td>
+                                <td>@article.LastUpdatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>
+                                    <a asp-controller="Editor" asp-action="Details" asp-route-id="@article.Id" class="btn-primary-custom btn-sm py-1 px-2">
+                                        Review/Process
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <h4 class="font-weight-bold text-dark mt-5 mb-3" style="font-family: var(--serif-font);">Archived & Published Papers</h4>
+            @{
+                var archiveArticles = Model.Where(a => a.Status == ArticleStatus.Published || a.Status == ArticleStatus.Rejected).ToList();
+            }
+            @if (!archiveArticles.Any())
+            {
+                <p class="text-muted small">No historical articles in archive yet.</p>
+            }
+            else
+            {
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Status</th>
+                            <th>Date Finalized</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var article in archiveArticles)
+                        {
+                            <tr>
+                                <td style="max-width: 250px;">@article.Title</td>
+                                <td>@(article.Author?.Name ?? "N/A")</td>
+                                <td>
+                                    <span class="status-badge status-@(article.Status.ToString().ToLower())">
+                                        @article.Status
+                                    </span>
+                                </td>
+                                <td>@article.LastUpdatedAt.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <a asp-controller="Editor" asp-action="Details" asp-route-id="@article.Id" class="btn-secondary-custom btn-sm py-1 px-2">
+                                        View Log
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

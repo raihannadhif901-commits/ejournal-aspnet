@@ -1,0 +1,81 @@
+@model EJournal.Models.Article
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@section GoogleScholarMeta {
+    <meta name="citation_title" content="@Model.Title" />
+    <meta name="citation_author" content="@(Model.Author?.Name ?? "Anonymous")" />
+    @if (Model.Volume != null)
+    {
+        <meta name="citation_journal_title" content="Journal of Edge Computing" />
+        <meta name="citation_volume" content="@Model.Volume.VolumeNumber" />
+        <meta name="citation_issue" content="@Model.Volume.IssueNumber" />
+        <meta name="citation_publication_date" content="@Model.Volume.Year" />
+    }
+    @if (!string.IsNullOrEmpty(Model.Doi))
+    {
+        <meta name="citation_doi" content="@Model.Doi" />
+    }
+    <meta name="citation_pdf_url" content="@Url.Action("Download", "Archive", new { filename = Model.FilePath }, Context.Request.Scheme)" />
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Archive" asp-action="Index" class="text-dark">Archives</a></li>
+                @if (Model.Volume != null)
+                {
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Archive" asp-action="Issue" asp-route-id="@Model.VolumeId" class="text-dark">
+                            Vol @Model.Volume.VolumeNumber No @Model.Volume.IssueNumber
+                        </a>
+                    </li>
+                }
+                <li class="breadcrumb-item active" aria-current="page">Article Details</li>
+            </ol>
+        </nav>
+
+        @if (Model.Status != ArticleStatus.Published)
+        {
+            <div class="alert alert-warning mb-4">
+                <strong>Pre-publication Stage:</strong> This manuscript is currently in the <strong>@Model.Status</strong> phase and is only visible to authorized editorial staff, reviewers, or the submitting author.
+            </div>
+        }
+
+        <!-- Title -->
+        <h1 class="article-detail-title">@Model.Title</h1>
+
+        <!-- Author Affiliation -->
+        <h5 class="text-dark mb-3 font-weight-bold">
+            @(Model.Author?.Name ?? "Anonymous Author")
+        </h5>
+
+        <!-- Article Metadatas -->
+        <div class="article-meta d-flex flex-wrap">
+            <span><strong>Published:</strong> @(Model.Volume != null ? Model.Volume.Year.ToString() : "Awaiting Publication")</span>
+            <span><strong>DOI:</strong> @(Model.Doi ?? "Awaiting Assignment")</span>
+            <span><strong>Status:</strong> <span class="status-badge status-@(Model.Status.ToString().ToLower())">@Model.Status</span></span>
+        </div>
+
+        <!-- Abstract Container -->
+        <h4 class="font-weight-bold text-dark mb-3" style="font-family: var(--serif-font);">Abstract</h4>
+        <div class="article-abstract-box">
+            <p>@Model.Abstract</p>
+        </div>
+
+        <!-- Download Action -->
+        <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-4">
+            <div>
+                <p class="text-muted small mb-0">PDF File: @Model.FilePath</p>
+                <p class="text-muted small">Language: English</p>
+            </div>
+            <a asp-controller="Archive" asp-action="Download" asp-route-filename="@Model.FilePath" class="btn-primary-custom">
+                Download Full-Text PDF
+            </a>
+        </div>
+    </div>
+</div>

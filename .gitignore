@@ -1,21 +1,27 @@
-# Build folders
-bin/
-obj/
+# --- .NET Build Outputs ---
+[Bb]in/
+[Oo]bj/
 
-# Visual Studio / VS Code
+# --- Databases (SQLite) ---
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# --- User & IDE Files ---
 .vs/
 .vscode/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
+.idea/
 
-# Database files
-network_monitor.db
-network_monitor.db-journal
-network_monitor.db-shm
-network_monitor.db-wal
-
-# OS files
-.DS_Store
+# --- OS Artifacts ---
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Secure Uploads ---
+Uploads/*
+!Uploads/sample-article.pdf
