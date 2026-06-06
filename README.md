@@ -43,7 +43,7 @@ stateDiagram-v2
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 *   **Backend Framework:** ASP.NET Core 8.0 (MVC / Razor Pages)
 *   **Database (ORM):** SQLite + Entity Framework Core 8.0
