@@ -1,6 +1,14 @@
 # 📖 Journal of Edge Computing (JEC) - Editorial & Publishing System
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=raihannadhif901-commits/ejournal-aspnet)
+
+![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-8.0-239120?logo=csharp&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite&logoColor=white)
+![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap&logoColor=white)
+
 An enterprise-grade, lightweight **E-Journal & Peer Review Management System** built on **ASP.NET Core 8.0** and **SQLite**. This portal features role-based access control, a secure double-blind manuscript evaluation workflow, and SEO-optimized public archives with Google Scholar indexing support.
+
 
 ---
 
